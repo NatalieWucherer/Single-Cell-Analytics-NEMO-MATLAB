@@ -11,7 +11,7 @@ Run the matlab code using the new .mat file path:
 The nemo_umap_gene_browser('filepath') runs a GUI app similar to NeMO's website.
 The nemo_umap_multigene_panels('filepath', "gene1,gene2,gene3") runs an export to tiff version of the browser (there is no limit to the number of enterable genes in panels but they must be in the "x,y,z" format).
 
-.mat files must be named with the following convention "region sub-region descriptor.mat" the region is a two letter code corresponding to: thalamus "TH", Cortex "CX", and Ganglion Eminance "GE"
+.mat files must be named with the following convention "region sub-region descriptor.mat" the region is a two letter code corresponding to: thalamus "TH", Cortex "CX", and Ganglion Eminance "GE".
 These must be present to ensure appropriate selection of marker genes and cluster annotations.
 The following 4 letters (including the space after region) should correspond to the sub-region in order to ensure file and figure titles are named correctly.
 
@@ -19,11 +19,11 @@ Example: 'CX Prefrontal GW18 Matlab.mat' uses CX for annotations and will genera
 figure title 'AtlasClusterMap' or 'MultiUMAP'.
 This same nameing convention will be seen in the browser titles.
 
-If adding or changing clustering annotations use format "annotation name", ["gene1", "gene2"]; 
-Ensure changes are made within the appropriate markerDB{ } functions 
-Add this under the Markers secion (beginning line 52)
+If adding or changing clustering annotations use format: ' "annotation name", ["gene1", "gene2"]; '
+Ensure changes are made within the appropriate markerDB{ } functions. 
+Add this under the Markers secion (beginning line 52).
 
-To add more sub-regions add a new region map where regionMap('region abbreviation')="region name";
-Add this under the Region Map secion (beginning line 38)
+To add more regions add a new region map where ' regionMap('region abbreviation')="region name"; '
+Add this under the Region Map secion (beginning line 38).
 
-Note Not All Genes Will Be Found, If Not Found Try An Alias
+Note Not All Genes Will Be Found, If Not Found Try An Alias (ie. COUTF2 = NR2F2, NKX2.1 = NKX2-1).
