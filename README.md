@@ -2,7 +2,7 @@ Use NeMO Analytics Single Cell Workbench (https://nemoanalytics.org/sc_workbench
 This file will contain all of the paramiters entered into NeMO including dimentions and PCA. It also contains all genes and their Ensembl ID.
 
 Run the inspect_h5ad.py file via the command center: 
-(open the py file and change the file path to the H5AD file path (shift right-click on file and 'copy as path') paste into the "" leaving the r. Do not have multiple "" sets.)
+open the py file and change the file path to the H5AD file path (shift right-click on file and 'copy as path') paste into the "" leaving the r. Do not have multiple "" sets.
 
 For my set up the commad window requires the input of 'python C:\code\NEMO\inspect_h5ad.py'
 Once the command center/window displays save sucessful, the exported .mat can be renamed and moved. This python code only needs to be run once per H5AD file.
