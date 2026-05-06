@@ -325,4 +325,112 @@ exportgraphics(fig2,geneFile,'Resolution',300);
 
 disp("Saved: " + geneFile);
 
+%% FIGURE 3 — DOT PLOT (CLEAN SPACING + SHORT LABELS)
+
+% --- Map each cell → atlas label ---
+cellAtlasLabel = strings(nCells,1);
+
+for c = 1:nClust
+    mask = clusters == uClust{c};
+    cellAtlasLabel(mask) = clusterLabel(c);
+end
+
+% --- Unique atlas labels ---
+atlasLabels = unique(cellAtlasLabel);
+nAtlas = numel(atlasLabels);
+nGenes = numel(geneList);
+
+% --- Compute metrics ---
+pctExpr = zeros(nGenes,nAtlas);
+avgExpr = zeros(nGenes,nAtlas);
+
+for a = 1:nAtlas
+    mask = cellAtlasLabel == atlasLabels(a);
+
+    for g = 1:nGenes
+        gene = geneList(g);
+
+        if isKey(geneIndex,gene)
+            vals = X(mask, geneIndex(gene));
+
+            pctExpr(g,a) = mean(vals > 0) * 100;
+            avgExpr(g,a) = mean(vals);
+        end
+    end
+end
+
+% --- Normalize expression ---
+avgExprScaled = (avgExpr - min(avgExpr(:))) ./ ...
+                (max(avgExpr(:)) - min(avgExpr(:)) + eps);
+
+%% --- AUTO-SHORTEN LABELS ---
+shortLabels = atlasLabels;
+
+for i = 1:numel(shortLabels)
+
+    lab = shortLabels(i);
+
+    lab = replace(lab,"RADIAL GLIA AND ASTROCYTES","RG/AST");
+    lab = replace(lab,"ACTIVELY DIVIDING PROGENITORS","DIV PROG");
+    lab = replace(lab,"PERICYTES AND ENDOTHELIAL CELLS","PERI/ENDO");
+    lab = replace(lab,"GLUTAMATERGIC","GLU");
+    lab = replace(lab,"GABAERGIC","GABA");
+    lab = replace(lab,"MIGRATING NEURONS","MIG");
+
+    lab = replace(lab," / ","/");
+
+    if strlength(lab) > 18
+        lab = replace(lab,"/","/\newline");
+    end
+
+    shortLabels(i) = lab;
+end
+
+%% --- PLOT ---
+fig3 = figure('Color','w','Position',[200 200 900 600]); % narrower width
+hold on
+
+for g = 1:nGenes
+    for a = 1:nAtlas
+        dotSize = 20 + pctExpr(g,a)*1.5;
+        scatter(a, g, dotSize, avgExprScaled(g,a), 'filled');
+    end
+end
+
+% --- SAME colormap as UMAP ---
+colormap(parula);
+colorbar;
+
+
+%% --- AXIS FORMATTING ---
+set(gca,'YDir','reverse',...
+    'XTick',1:nAtlas,...
+    'XTickLabel',shortLabels,...
+    'YTick',1:nGenes,...
+    'YTickLabel',geneList);
+
+xtickangle(45);
+
+xlim([0.5, nAtlas + 0.5]);
+
+ylim([0.3, nGenes + 0.7]);
+
+ax = gca;
+ax.FontSize = 8;
+ax.XAxis.FontSize = 7;
+ax.YAxis.FontSize = 9;
+ax.YAxis.TickLabelGapOffset = 6;  % <-- key line
+
+xlabel('Cell Types');
+ylabel('Genes');
+title('Dot Plot');
+
+% --- SAVE ---
+dotFile = fullfile(outdir,...
+    saveprefix + "_" + strjoin(geneList,"_") + "_DotPlot.tif");
+exportgraphics(fig3,dotFile,'Resolution',300);
+
+disp("Saved: " + dotFile);
+
+
 end
